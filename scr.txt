@@ -1,0 +1,57 @@
+good morning dr tan, i am chan siang sheng, this is a recording for cpt 346 assignment 2. i would like to mention i'm using google colaboratory to do the program. 
+
+First of all, we need three different excel files namely, test, train and validation. test and validation are provided by the assignment while the train data is annotated by students of cpt346 or cpc353. inside the exdel file, we have 1000 rows of news headline with its sentiment in both tet and validaiton, while the train excel file has 60k of news headlines. 
+i have uploaded the excel files into my own github repository, so in this google colab, we will begin with downloading the files from the github.
+After we have downloaded the excel files, we will read the excel file with pandas read_csv function and separate the sentiment and sentence from each excel file into sentence and sentiment variables
+
+next, we will create a data preprocessing function to preprocess the sentence. we are using ntlk and its package such as wordnet, stopwords, average_perceptron_tagger and punkt.
+
+inside the function, first we will remove any punctuation from the sentence. Punctuation such as period, comma, quotation, question mark, exclamation, etc.
+then we tokenize each word from the sentence. After that we check each uncapitalized token if it is a stopword or not, and if it is a stopword, we will ignore it, else if it is not a stopword, we will add it into a new list.
+we will change the list into a string format by using python join to join each element and then replace the original sentence with this new sentence
+
+so we run the data preprocessing function with the sentence
+
+next, we will be looking at glove word embedding. we download the glove first and for this assignment, i'm using glove.6b.100d which represent 100 dimension or 100 features for each words that exist in the glove.
+
+Next, we create another function to vector the glove word embedding model. this function is used to check if the token in the sentence exist in glove word embedding or not, if the token exist, we will take the 100 feature from the glove word embedding and add it into a new list, otherwise if the token is not found in glove word embedding, we will add zeros instead of the features.
+
+so we run the glove word embedding into the sentence to make sentence vector
+
+next, we create neural network model. Our neural network model is a bidirectional long-short term memory model. for our first model, we will make it very simple, we design it with only 3 layers, the first layer is to accept input, the second layer is the bidirectional lstm layer and we are using (relu) which is rectified linear unit activation function. relu is a linear piecewise, its range is 0 to infinity, this means that the output is either positive value or zero and this function can map the positive values very well but not the negative value and it is still useful in overcome vanishing gradient problem. lastly, the third layer is a output layer and we are using softmax activation function because we have multiclass classification which is positive, negative and neutral. after that we will compile all the layer chronogically with cross entropy loss function, adamax optimizer and using accuracy as the metric, because we only concern about the accuracy of the model in predicting sentiment of news headlines.
+
+So we run the model with training data and use the validaiton data to validate in each 10 epochs
+
+after we have the model trained, we can plot the the accuracy and loss values through the use of matplotlib. our training accuracy increased linearly while the training loss decrease linearly which is what we desired. however, both validation accuracy and validation loss fluctuated. this can due to multiple possible reasons such as the size of validation is not big enough as we only have 1000 of new headlines in validation data, any small changes can make fluctuation. Besides that, we also have a very simple design of neural network, so the weight is very less and it not might be able to approximate the validation data accurately.
+
+Next, we can finally use the model to predict the sentiment on news headlines of test data. Then we get 0.8383 of loss and 0.6230 of accuracy. we can also do a visual presentation of this prediction with the confusion matrix and seaborn.
+the y-axis is the actual sentiment while the x-axis is the predicted sentiment from the model. this model is able to predict 60% of neutral sentiment, 69% of positive sentiment and 53% of negative sentiment correctly. Now, we are done with our first model, we will use this model to make improvements or adjustments as an improved bidirectional lstm model.
+
+Now we are creating another model with 5 layers, the first layer remain the same to accept inputs, the 2nd layer will be a masking layer to skip processing some of the input due to the padding in glove word embedding vector. then the 3rd layer is the bidirectional lstm layer, using the same relu activation function but a small addition of 0.5 recurrent dropout to prevent overfitting. lastly another new layer with relu activation function and a output layer with softmax function.
+
+so we run the improved model with our trained data and use the validation data for validation in each 10 epochs.
+
+after that, we can plot the graph again with matplotlib. this time, our training accuracy and loss have the same pattern as our first model. however, the validation loss have increases this time. this can be happened due to our improved model able to approximate the validation data better than our first model even though the validation loss is increasing.
+
+then, we use the improved model to run the training data. we will get 1.015 of loss and 0.6079 of accuracy. Again, we will use the confusion matrix and seaborn to visualize this prrediction. we can observe that the model is able to predict 52% of neutral sentiment, 66% of positive sentiment and 63% of negative sentiment correctly.
+
+after that, we are done with running our neural network, now we can analyze our result. these two image are made by myself, the first one is a compilation of accuracy and loss result between the two models.
+
+In here, we can observe that our improved bidirectional lstm managed to have higher accuracy and lower loss in training data but in testing data, it has worse performance than the first model, it has lower accuracy and higher loss. This actually indicates that the addition of layers doesnt really improve the accuracy or lowering the loss, however it increase the weight so that the model can approximate the values more precisely. the notable takeaway is the addition of layers isnt directly proportional to a better result but a more accurate accuracy and loss with more weight in network.
+
+next, the second image is the compilation of confusion matrices from the two models. in here, we can observe that the improved model has better probability in predicting correctly only in negative sentiment compared to the first model. the first model has 0.6 and 0.69 in neutral and positive sentiment while the improved model has 0.52 and 0.66. refering to this values, we can indicate that the improved model not only have lower accuracy compared to the first model, but it is possible to have better accuracy in certain classification compared to the first model. For example, the improved model has 0.63 in predicting negative sentiment correctly while the first model has 0.53.
+
+last but not the least, these two models were able to do sentiment analysis quite successfully because the probabilities in correct prediction is pretty significant compared to the sum of the incorrect prediction in each classification. I also would like to end this recording by saying, we can actually improve this result in a more desirable way by making quality control in the data. For instance, we can include more age of audience in annotating the train data so that it can be fully represent the true sentiment on news headlines.
+
+That's all for my cpt 346 assignment. thank you.
+
+
+
+
+
+
+
+
+
+
+
